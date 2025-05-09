@@ -19,5 +19,15 @@ namespace CitiesCalculations.Repos
         {
             get { return values[index]; }
         }
+
+        public T GetValueByCondition(Func<T, bool> condition)
+        {
+            return values.FirstOrDefault(condition);
+        }
+
+        public List<T> GetValuesByCondition(Func<T, bool> condition)
+        {
+            return values.FindAll(x => condition(x));
+        }
     }
 }
