@@ -20,7 +20,7 @@ static string LoadEmbeddedResource(string resourceName)
 string resourceName = "CitiesCalculations.CitiesFiles.MiastaWspolrzedne2.txt";
 string fileContent = LoadEmbeddedResource(resourceName);
 
-var cityRepo = new CityRepo(new TxtDataParser(fileContent));
+var cityRepo = new CityRepo(new TxtCitiesDataParser(fileContent));
 
 Console.WriteLine("------------------Zadanie 1.------------------");
 CalculationsHelper.Task1(cityRepo, "Praga", "Łódź");
@@ -37,4 +37,9 @@ CalculationsHelper.Task4(cityRepo, "Szczecin", "Warszawa", ["Włocławek", "Elbl
 Console.WriteLine("------------------Zadanie 5.------------------");
 CalculationsHelper.Task5(cityRepo, "Łódź", "Gdańsk", 5, 2000);
 
+Console.WriteLine("------------------Zadanie 6.------------------");
+fileContent = LoadEmbeddedResource("CitiesCalculations.CitiesFiles.MiastaPołączenia.txt");
+var connectionsRepo = new CitiesConnectionsRepo(new TxtCitiesConnectionsDataParser(fileContent));
+
 Console.WriteLine(cityRepo.ToString());
+Console.WriteLine(connectionsRepo.ToString());

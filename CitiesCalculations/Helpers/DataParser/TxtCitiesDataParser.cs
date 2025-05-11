@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace CitiesCalculations.Helpers.DataParser
 {
-    internal class TxtDataParser : IDataParser<City>
+    internal class TxtCitiesDataParser : IDataParser<City>
     {
         public string Data { get; private set; }
 
-        public TxtDataParser(string data)
+        public TxtCitiesDataParser(string data)
         {
             Data = data;
         }

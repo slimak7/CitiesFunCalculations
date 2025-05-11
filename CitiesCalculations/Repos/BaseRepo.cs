@@ -10,7 +10,7 @@ namespace CitiesCalculations.Repos
     internal abstract class BaseRepo<T>
     {
         protected List<T> values;
-        protected BaseRepo(IDataParser<T> dataParser) 
+        protected BaseRepo(IDataParser<T> dataParser)
         {
             values = dataParser.ParseData();
         }
@@ -28,6 +28,16 @@ namespace CitiesCalculations.Repos
         public List<T> GetValuesByCondition(Func<T, bool> condition)
         {
             return values.FindAll(x => condition(x));
+        }
+
+        public virtual string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (T value in values)
+            {
+                sb.AppendLine(value.ToString());
+            }
+            return sb.ToString();
         }
     }
 }

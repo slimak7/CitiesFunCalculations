@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace CitiesCalculations.Repos
 {
-    internal class CityRepo : BaseRepo<City>
+    internal class CitiesConnectionsRepo : BaseRepo<CitiesConnection>
     {
-        public CityRepo(IDataParser<City> dataParser) : base(dataParser)
+        public CitiesConnectionsRepo(IDataParser<CitiesConnection> dataParser) : base(dataParser)
         {
         }
     }

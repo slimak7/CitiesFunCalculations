@@ -85,7 +85,7 @@ namespace CitiesCalculations.Helpers.Calculations
                         minIndex = i;
                     }
                 }
-                
+
                 currentCity = optionCities[minIndex];
                 citiesOrder.Add(citiesToVisit.IndexOf(currentCity.Name));
                 optionCities.RemoveAt(minIndex);
@@ -97,7 +97,7 @@ namespace CitiesCalculations.Helpers.Calculations
                 sb.Append($"--{citiesToVisit[index]}--");
             }
             sb.Append($"--{endCity.Name}");
-            Console.WriteLine(sb.ToString());   
+            Console.WriteLine(sb.ToString());
         }
 
         public static void Task5(CityRepo cityRepo, string cityStart, string cityEnd, int numberOfCitiesToVisit, int distanceLimit)
@@ -110,7 +110,7 @@ namespace CitiesCalculations.Helpers.Calculations
             double airQuality = double.MinValue;
             int totalDistance = 0;
 
-            CalculateRoadWithBestAirQuality(ref citiesInOrder, ref finalCityOrder, ref airQuality, startCity, endCity, cityRepo, ref numberOfCitiesToVisit, ref totalDistance, in distanceLimit);
+            CalculateRoadWithBestAirQuality(citiesInOrder, finalCityOrder, ref airQuality, startCity, endCity, cityRepo, numberOfCitiesToVisit, totalDistance, distanceLimit);
 
             StringBuilder sb = new StringBuilder();
             foreach (var city in finalCityOrder)
@@ -118,63 +118,60 @@ namespace CitiesCalculations.Helpers.Calculations
                 sb.Append($"--{city.Name}--");
             }
             Console.WriteLine($"Podróż z {startCity.Name} do {endCity.Name}" +
-                $" z najlepsza jakościa powietrza { double.Round(airQuality, 2)}" +
+                $" z najlepsza jakościa powietrza {double.Round(airQuality, 2)}" +
                 $" dla liczby przystanków {numberOfCitiesToVisit} i limitem {distanceLimit} km to: {sb}");
         }
 
         private static void CalculateRoadWithBestAirQuality(
-            ref List<City> cities,
-            ref List<City> finalOrder,
-            ref double airQuality,
-            City startCity,
-            City endCity,
-            CityRepo cityRepo,
-            ref int numberOfCitiesToVisitBetween,
-            ref int totalDistance,
-            in int distanceLimit)
+        List<City> currentPath,
+        List<City> bestPath,
+        ref double bestAirQuality,
+        City start,
+        City end,
+        CityRepo repo,
+        int maxIntermediate,
+        int distanceSoFar,
+        int distanceLimit)
         {
-            if (cities.Any())
-            {
-                if (cities.Count == numberOfCitiesToVisitBetween + 1)
-                {
-                    var distance = CalculateStraightDistance(cities.Last(), endCity);
+            if (currentPath.Count > maxIntermediate + 1) return;
 
-                    if (totalDistance + distance <= distanceLimit)
-                    {
-                        totalDistance += distance;
-                        cities.Add(endCity);
-                        var quality = cities.Sum(c => c.AirQuality) / cities.Count;
-                        if (quality > airQuality)
-                        {
-                            airQuality = quality;
-                            finalOrder = [.. cities]; 
-                        }
-                    }
-                }
-                else
-                {
-                    
-                    var citiesToVisit = GetCitiesToVisit(cityRepo, cities, startCity, endCity);
-                    foreach (var city in citiesToVisit)
-                    {
-                        var distance = CalculateStraightDistance(cities.Last(), city);
-                        if (totalDistance + distance <= distanceLimit)
-                        {
-                            totalDistance += distance;
-                            cities.Add(city);
-                            CalculateRoadWithBestAirQuality(ref cities, ref finalOrder, ref airQuality, startCity, endCity, cityRepo, ref numberOfCitiesToVisitBetween, ref totalDistance, in distanceLimit);
-                            totalDistance -= distance;
-                            cities.RemoveAt(cities.Count - 1);
-                        }
-                    }
-                }
+            if (currentPath.Count == 0)
+            {
+                currentPath.Add(start);
             }
             else
             {
-                cities.Add(startCity);
-                CalculateRoadWithBestAirQuality(ref cities, ref finalOrder, ref airQuality, startCity, endCity, cityRepo, ref numberOfCitiesToVisitBetween, ref totalDistance, in distanceLimit);
+                City last = currentPath.Last();
+                if (currentPath.Count == maxIntermediate + 1)
+                {
+                    int toEnd = CalculateStraightDistance(last, end);
+                    if (distanceSoFar + toEnd <= distanceLimit)
+                    {
+                        var fullPath = new List<City>(currentPath) { end };
+                        double avgAir = fullPath.Average(c => c.AirQuality);
+                        if (avgAir > bestAirQuality)
+                        {
+                            bestAirQuality = avgAir;
+                            bestPath.Clear();
+                            bestPath.AddRange(fullPath);
+                        }
+                    }
+                    return;
+                }
+            }
+
+            foreach (var next in GetCitiesToVisit(repo, currentPath, start, end))
+            {
+                int toNext = CalculateStraightDistance(currentPath.Last(), next);
+                if (distanceSoFar + toNext <= distanceLimit)
+                {
+                    currentPath.Add(next);
+                    CalculateRoadWithBestAirQuality(currentPath, bestPath, ref bestAirQuality, start, end, repo, maxIntermediate, distanceSoFar + toNext, distanceLimit);
+                    currentPath.RemoveAt(currentPath.Count - 1);
+                }
             }
         }
+
 
         private static List<City> GetCitiesToVisit(CityRepo cityRepo, List<City> cities, City startCity, City endCity)
         {
@@ -182,7 +179,7 @@ namespace CitiesCalculations.Helpers.Calculations
             return cityRepo.GetValuesByCondition(c => !cities.Contains(c) && c != startCity && c != endCity).ToList();
         }
 
-        
+
 
         private static List<int> GetDistances(City startCity, City endCity, List<City> cities)
         {
@@ -202,5 +199,5 @@ namespace CitiesCalculations.Helpers.Calculations
             return (int)(Math.Sqrt(Math.Pow(city2.X - city1.X, 2) + Math.Pow(city2.Y - city1.Y, 2)) + 0.5d);
         }
     }
-    
+
 }
