@@ -40,6 +40,13 @@ CalculationsHelper.Task5(cityRepo, "Łódź", "Gdańsk", 5, 2000);
 Console.WriteLine("------------------Zadanie 6.------------------");
 fileContent = LoadEmbeddedResource("CitiesCalculations.CitiesFiles.MiastaPołączenia.txt");
 var connectionsRepo = new CitiesConnectionsRepo(new TxtCitiesConnectionsDataParser(fileContent));
+string c1;
+Console.WriteLine("Podaj nazwę miasta 1:");
+c1 = Console.ReadLine();
+string c2;
+Console.WriteLine("Podaj nazwę miasta 2:");
+c2 = Console.ReadLine();
+CalculationsHelper.Task6(connectionsRepo, c1, c2);
 
 Console.WriteLine(cityRepo.ToString());
 Console.WriteLine(connectionsRepo.ToString());

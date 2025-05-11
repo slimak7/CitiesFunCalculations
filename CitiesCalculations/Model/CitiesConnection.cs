@@ -8,20 +8,30 @@ namespace CitiesCalculations.Model
 {
     internal class CitiesConnection
     {
-        public string City1 { get; private set; }
-        public string City2 { get; private set; }
-        public double Distance { get; private set; }
+        public string CityName { get; private set; }
+        public List<(CitiesConnection connection, double distance)> Connections { get; private set; }
 
-        public CitiesConnection(string city1, string city2, double distance)
+        public CitiesConnection(string cityName)
         {
-            City1 = city1;
-            City2 = city2;
-            Distance = distance;
+            CityName = cityName;
+            Connections = [];
+        }
+
+        public void AddConnection(CitiesConnection connection, double distance)
+        {
+            Connections.Add((connection, distance));
         }
 
         public override string ToString()
         {
-            return $"{City1} - {City2}: {Distance} km";
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine(CityName);
+            foreach (var connection in Connections)
+            {
+                stringBuilder.AppendLine($"--{connection.connection.CityName}: {connection.distance} km");
+            }
+            return stringBuilder.ToString();
         }
+
     }
 }

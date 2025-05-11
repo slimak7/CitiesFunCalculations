@@ -20,6 +20,11 @@ namespace CitiesCalculations.Repos
             get { return values[index]; }
         }
 
+        public int GetLength()
+        {
+            return values.Count;
+        }
+
         public T GetValueByCondition(Func<T, bool> condition)
         {
             return values.FirstOrDefault(condition);

@@ -172,6 +172,71 @@ namespace CitiesCalculations.Helpers.Calculations
             }
         }
 
+        public static void Task6(CitiesConnectionsRepo citiesConnectionsRepo, string cityStart, string cityEnd)
+        {
+            var startConnection = citiesConnectionsRepo.GetValueByCondition(c => c.CityName == cityStart);
+            var endConnection = citiesConnectionsRepo.GetValueByCondition(c => c.CityName == cityEnd);
+
+            if (startConnection == null || endConnection == null)
+            {
+                Console.WriteLine("Nieprawidłowe nazwy miast.");
+                return;
+            }
+
+            var visited = new HashSet<string>();
+            var priorityQueue = new SortedSet<(double distance, CitiesConnection connection)>(
+                Comparer<(double distance, CitiesConnection connection)>.Create((a, b) => a.distance == b.distance ? a.connection.CityName.CompareTo(b.connection.CityName) : a.distance.CompareTo(b.distance))
+            );
+
+            priorityQueue.Add((0, startConnection));
+
+            var distances = new Dictionary<string, double> { { cityStart, 0 } };
+            var previous = new Dictionary<string, string>();
+
+            while (priorityQueue.Count > 0)
+            {
+                var (currentDistance, currentConnection) = priorityQueue.Min;
+                priorityQueue.Remove(priorityQueue.Min);
+
+                if (visited.Contains(currentConnection.CityName))
+                    continue;
+
+                visited.Add(currentConnection.CityName);
+
+                if (currentConnection.CityName == cityEnd)
+                {
+                    var path = new List<string>();
+                    var current = cityEnd;
+
+                    while (current != null)
+                    {
+                        path.Add(current);
+                        previous.TryGetValue(current, out current);
+                    }
+
+                    path.Reverse();
+                    Console.WriteLine($"Najkrótsza trasa z {cityStart} do {cityEnd} wynosi {double.Round(currentDistance, 2)} km: {string.Join(" -> ", path)}");
+                    return;
+                }
+
+                foreach (var (neighbor, distance) in currentConnection.Connections)
+                {
+                    if (visited.Contains(neighbor.CityName))
+                        continue;
+
+                    var newDistance = currentDistance + distance;
+
+                    if (!distances.ContainsKey(neighbor.CityName) || newDistance < distances[neighbor.CityName])
+                    {
+                        distances[neighbor.CityName] = newDistance;
+                        previous[neighbor.CityName] = currentConnection.CityName;
+                        priorityQueue.Add((newDistance, neighbor));
+                    }
+                }
+            }
+
+            Console.WriteLine($"Nie znaleziono trasy z {cityStart} do {cityEnd}.");
+        }
 
         private static List<City> GetCitiesToVisit(CityRepo cityRepo, List<City> cities, City startCity, City endCity)
         {
