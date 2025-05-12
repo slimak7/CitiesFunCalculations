@@ -182,9 +182,8 @@ namespace CitiesCalculations.Helpers.Calculations
             var visited = new HashSet<string>();
             var priorityQueue = new SortedSet<(double distance, CitiesConnection connection)>(
                 Comparer<(double distance, CitiesConnection connection)>.Create((a, b) => a.distance == b.distance ? a.connection.CityName.CompareTo(b.connection.CityName) : a.distance.CompareTo(b.distance))
-            );
-
-            priorityQueue.Add((0, startConnection));
+            )
+            { (0, startConnection)};
 
             var distances = new Dictionary<string, double> { { cityStart, 0 } };
             var previous = new Dictionary<string, string>();

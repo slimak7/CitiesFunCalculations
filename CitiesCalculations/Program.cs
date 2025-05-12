@@ -40,7 +40,7 @@ CalculationsHelper.Task2(cityRepo, "Warszawa", "Szczecin", "Łódź", "Poznań")
 
 Console.WriteLine("------------------Zadanie 3.------------------" +
     "\nWyznacz czy trasa z Łodzi do Warszawy jest szybsza przez Radom, Płock czy \r\nPiotrków Trybunalski\n");
-CalculationsHelper.Task3(cityRepo, "Łódź", "Warszawa", ["Radom", "Płock", "Piotrków Tryb,"]);
+CalculationsHelper.Task3(cityRepo, "Łódź", "Warszawa", ["Radom", "Płock", "Piotrków Tryb"]);
 
 Console.WriteLine("------------------Zadanie 4.------------------" +
     "\nWyznacz najkrótsza trasę wycieczki ze Szczecina do Warszawy tak aby na trasie " +

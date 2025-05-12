@@ -4,7 +4,7 @@ Warszawa	466,5	239,7	0,0
 Poznań	179,3	258,7	1,0
 Szczecin	7,4	373,6	3,0
 Radom	478,2	146,0	5,0
-Piotrków Tryb,	386,5	146,3	4,5
+Piotrków Tryb	386,5	146,3	4,5
 Płock	373,9	274,6	1,5
 Włocławek	349,5	285,6	4,0
 Elbląg	353,7	453,5	4,5
