@@ -1,11 +1,6 @@
 ﻿using CitiesCalculations.Model;
 using CitiesCalculations.Repos;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace CitiesCalculations.Helpers.Calculations
 {
@@ -52,7 +47,8 @@ namespace CitiesCalculations.Helpers.Calculations
             var minIndex = distances.IndexOf(minDistance);
             Console.WriteLine($"Trasa z {startCity.Name} do {endCity.Name}" +
                 $" mając do wyboru: {options.Aggregate((x1, x2) => x1 + ", " + x2)} jest najszybsza przez {options[minIndex]}" +
-                $" i wynosi {distances[minIndex]} km");
+                $" i wynosi {distances[minIndex]} km wobec pozostałych:" +
+                $" {string.Join(", ", distances.Where(x => x != minDistance).Select(x => x + " km"))}");
         }
 
         public static void Task4(CityRepo cityRepo, string cityStart, string cityEnd, List<string> citiesToVisit)
@@ -240,11 +236,8 @@ namespace CitiesCalculations.Helpers.Calculations
 
         private static List<City> GetCitiesToVisit(CityRepo cityRepo, List<City> cities, City startCity, City endCity)
         {
-            // Fix: Move the lambda expression here to avoid using 'ref' inside it
             return cityRepo.GetValuesByCondition(c => !cities.Contains(c) && c != startCity && c != endCity).ToList();
         }
-
-
 
         private static List<int> GetDistances(City startCity, City endCity, List<City> cities)
         {
